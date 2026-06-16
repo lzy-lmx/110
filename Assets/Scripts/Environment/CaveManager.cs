@@ -1,12 +1,16 @@
 using UnityEngine;
 
 /// <summary>
-/// 洞穴管理脚本
+/// 洞穴管理脚本 - 优化版
 /// </summary>
-public class CaveManager : MonoBehaviour
+public class CaveManager : EnvironmentManager
 {
     [SerializeField] private Material caveMaterial;
     [SerializeField] private bool enableLighting = true;
+    [SerializeField] private float lightRange = 10f;
+    [SerializeField] private float lightIntensity = 0.8f;
+    
+    private readonly Color lightColor = new Color(1f, 0.9f, 0.7f);
     
     void Start()
     {
@@ -15,7 +19,6 @@ public class CaveManager : MonoBehaviour
     
     void InitializeCaves()
     {
-        // 为洞穴添加灯光
         foreach (Transform child in transform)
         {
             if (child.name.Contains("Cave"))
@@ -25,29 +28,17 @@ public class CaveManager : MonoBehaviour
                     AddCaveLighting(child.gameObject);
                 }
                 
-                ApplyCaveMaterial(child.gameObject);
+                ApplyMaterialToObject(child.gameObject, GetOrCreateMaterial(caveMaterial));
             }
         }
     }
     
     void AddCaveLighting(GameObject cave)
     {
-        // 添加光源到洞穴
         Light light = cave.AddComponent<Light>();
         light.type = LightType.Point;
-        light.range = 10f;
-        light.intensity = 0.8f;
-        light.color = new Color(1f, 0.9f, 0.7f); // 温暖的光
-    }
-    
-    void ApplyCaveMaterial(GameObject cave)
-    {
-        if (caveMaterial == null) return;
-        
-        MeshRenderer renderer = cave.GetComponent<MeshRenderer>();
-        if (renderer != null)
-        {
-            renderer.material = caveMaterial;
-        }
+        light.range = lightRange;
+        light.intensity = lightIntensity;
+        light.color = lightColor;
     }
 }

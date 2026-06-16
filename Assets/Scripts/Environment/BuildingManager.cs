@@ -1,41 +1,30 @@
 using UnityEngine;
 
 /// <summary>
-/// 建筑管理脚本
+/// 建筑管理脚本 - 优化版
 /// </summary>
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : EnvironmentManager
 {
     [SerializeField] private Material woodMaterial;
     [SerializeField] private Material stoneMaterial;
     
     void Start()
     {
-        // 初始化建筑
         InitializeBuildings();
     }
     
     void InitializeBuildings()
     {
-        // 为所有建筑分配材质
         foreach (Transform child in transform)
         {
             if (child.name.Contains("House"))
             {
-                ApplyBuildingMaterial(child.gameObject, woodMaterial);
+                ApplyMaterialToObject(child.gameObject, GetOrCreateMaterial(woodMaterial));
             }
             else if (child.name.Contains("Cave"))
             {
-                ApplyBuildingMaterial(child.gameObject, stoneMaterial);
+                ApplyMaterialToObject(child.gameObject, GetOrCreateMaterial(stoneMaterial));
             }
-        }
-    }
-    
-    void ApplyBuildingMaterial(GameObject building, Material material)
-    {
-        MeshRenderer renderer = building.GetComponent<MeshRenderer>();
-        if (renderer != null && material != null)
-        {
-            renderer.material = material;
         }
     }
 }
