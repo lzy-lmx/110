@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 玩家控制脚本 - 优化版
+/// 玩家控制脚本 - BUG修复版
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
@@ -52,8 +52,8 @@ public class PlayerController : MonoBehaviour
         // 清除垂直方向，确保沿着地面移动
         cameraForward.y = 0;
         cameraRight.y = 0;
-        cameraForward.Normalize();
-        cameraRight.Normalize();
+        cameraForward = cameraForward.normalized;  // 修复：重新规范化
+        cameraRight = cameraRight.normalized;      // 修复：重新规范化
         
         // 计算移动方向
         moveDirection = (cameraForward * vertical + cameraRight * horizontal).normalized;

@@ -2,13 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// 地形生成脚本 - 优化版
-/// 生成平坦地形、小路、水流、洞穴和建筑
+/// 地形生成脚本 - BUG修复版
+/// 修复：添加 Mesh 顶点数量检查
 /// </summary>
 public class TerrainGenerator : MonoBehaviour
 {
     [SerializeField] private TerrainConfig config;
     [SerializeField] private bool generateOnStart = true;
+    
+    // Unity Mesh 的顶点上限
+    private const int MAX_VERTICES = 65000;
     
     private GameObject terrainObject;
     private Dictionary<string, GameObject> decorationParents = new Dictionary<string, GameObject>();
@@ -23,12 +26,21 @@ public class TerrainGenerator : MonoBehaviour
     
     public void GenerateMap()
     {
+        // 检查地形大小是否超过限制
+        int totalVertices = (config.mapWidth + 1) * (config.mapLength + 1);
+        if (totalVertices > MAX_VERTICES)
+        {
+            Debug.LogError($"地形太大！顶点数 {totalVertices} 超过限制 {MAX_VERTICES}。");
+            Debug.LogError($"建议：减小地图大小或分割为多个网格。");
+            return;
+        }
+        
         ClearMap();
         CreateBaseTerrain();
         CreatePaths();
         CreateWater();
         SpawnDecorations();
-        Debug.Log("地图生成完成!");
+        Debug.Log("地图生成完成！");
     }
     
     void CreateBaseTerrain()

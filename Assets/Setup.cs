@@ -1,15 +1,16 @@
 using UnityEngine;
 #if UNITY_EDITOR
-using UnityEditor;
+using UnityEditor.SceneManagement;
 #endif
 
 /// <summary>
-/// 一键设置脚本 - 创建整个游戏场景 - 优化版
+/// 一键设置脚本 - 创建整个游戏场景 - BUG修复版
+/// 修复：使用 transform 而不是 GetComponent<Transform>()
 /// </summary>
 public class Setup : MonoBehaviour
 {
 #if UNITY_EDITOR
-    [MenuItem("Game/Setup Scene")]
+    [UnityEditor.MenuItem("Game/Setup Scene")]
     public static void SetupScene()
     {
         Debug.Log("开始设置游戏场景...");
@@ -99,7 +100,8 @@ public class Setup : MonoBehaviour
     {
         light.intensity = 1.2f;
         light.color = new Color(1f, 0.95f, 0.8f);
-        light.GetComponent<Transform>().rotation = Quaternion.Euler(50, -30, 0);
+        // 修复：直接使用 transform 而不是 GetComponent<Transform>()
+        light.transform.rotation = Quaternion.Euler(50, -30, 0);
     }
     
     static Material CreateColoredMaterial(Color color)
